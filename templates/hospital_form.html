@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Rumah Sakit - Health System Suite</title>
+    
+    <style>
+        :root {
+            --primary-dark: #096B68;
+            --primary: #129990;
+            --primary-light: #90D1CA;
+            --accent: #FFFBDE;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+            --gray: #e0e0e0;
+            --gray-dark: #757575;
+            --error: #e53935;
+            --success: #43a047;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--gray-light);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: bold;
+        }
+
+        .logo h1 {
+            margin-left: 10px;
+            color: var(--primary-dark);
+        }
+
+        .user-menu a {
+            margin-left: 15px;
+            text-decoration: none;
+            color: var(--primary-dark);
+            font-weight: 500;
+        }
+
+        .main-content {
+            padding: 40px 0;
+        }
+
+        .page-header h2 {
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+        }
+
+        .card {
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            margin-bottom: 6px;
+            display: block;
+            color: var(--primary-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--gray);
+            border-radius: 4px;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            padding: 12px 25px;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .alert-success {
+            background-color: rgba(67,160,71,0.1);
+            border-left: 4px solid var(--success);
+            padding: 12px;
+            margin-bottom: 15px;
+            color: var(--success);
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">HS</div>
+                    <h1>Health System</h1>
+                </div>
+                <div class="user-menu">
+                    <a href="/dashboard">Dashboard</a>
+                    <a href="/hospitals">Rumah Sakit</a>
+                    <a href="/">Dokter</a>
+                    <a href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div class="container">
+
+            <div class="page-header">
+                <h2>Tambah Rumah Sakit</h2>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% for category, message in messages %}
+                <div class="alert-success">{{ message }}</div>
+              {% endfor %}
+            {% endwith %}
+
+            <div class="card">
+                <form method="post">
+
+                    <div class="form-group">
+                        <label for="name">Nama Rumah Sakit</label>
+                        <input type="text" id="name" name="name" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="unit">Unit</label>
+                        <select name="unit" id="unit" class="form-control" required>
+                            <option value="">-- Pilih Unit --</option>
+                            <option value="A">Unit A</option>
+                            <option value="B">Unit B</option>
+                            <option value="C">Unit C</option>
+                            <option value="D">Unit D</option>
+                            <option value="E">Unit E</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Alamat</label>
+                        <input type="text" id="address" name="address" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">No. Telepon</label>
+                        <input type="text" id="phone" name="phone" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Deskripsi</label>
+                        <textarea id="description" name="description" class="form-control"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn">Submit</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
