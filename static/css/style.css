@@ -105,6 +105,22 @@ body {
     background-color: var(--primary-dark);
 }
 
+.btn-edit {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 8px 14px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-edit:hover {
+    background-color: var(--primary-dark);
+}
+
 .btn-detail {
     background-color: var(--primary-dark);
     color: var(--white);
@@ -117,6 +133,19 @@ body {
 
 .btn-detail:hover {
     background-color: var(--primary);
+}
+
+.btn-danger {
+    background-color: #e53935;
+    padding: 8px 12px;
+    border-radius: 4px;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-danger:hover {
+    background-color: #c62828;
 }
 
 /* ===== PAGE HEADER ===== */

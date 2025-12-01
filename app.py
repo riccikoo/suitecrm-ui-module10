@@ -125,6 +125,62 @@ def create_hospital():
 
     return render_template("hospital_form.html")
 
+# =========================== EDIT HOSPITAL ===========================
+@app.route("/hospital/edit/<hospital_id>", methods=["GET", "POST"])
+def edit_hospital(hospital_id):
+
+    if "access_token" not in session:
+        flash("Silakan login dulu", "warning")
+        return redirect("/login")
+
+    headers = {
+        "Authorization": f"Bearer {session['access_token']}",
+        "Content-Type": "application/json"
+    }
+
+    # ============================================================
+    # 1. GET DATA HOSPITAL UNTUK PREFILL FORM
+    # ============================================================
+    if request.method == "GET":
+        url = f"{API_V8}/ha_hospital/{hospital_id}"
+        response = requests.get(url, headers=headers)
+
+        if response.status_code == 200:
+            hospital = response.json().get("data", {})
+            return render_template("hospital_edit.html", hospital=hospital)
+        else:
+            flash("Gagal mengambil data rumah sakit", "danger")
+            return redirect("/hospitals")
+
+    # ============================================================
+    # 2. UPDATE DATA HOSPITAL (PUT)
+    # ============================================================
+    if request.method == "POST":
+
+        data = {
+            "data": {
+                "type": "ha_hospital",
+                "id": hospital_id,
+                "attributes": {
+                    "name": request.form.get("name"),
+                    "unit": request.form.get("unit"),
+                    "address": request.form.get("address"),
+                    "phone": request.form.get("phone"),
+                    "description": request.form.get("description"),
+                }
+            }
+        }
+
+        url = API_V8   # POST ke endpoint yang sama
+        response = requests.patch(url, json=data, headers=headers)
+
+
+        if response.status_code in [200, 201]:
+            flash("Data rumah sakit berhasil diperbarui!", "success")
+            return redirect("/hospitals")
+        else:
+            flash(f"Update gagal: {response.text}", "danger")
+            return redirect(f"/hospital/edit/{hospital_id}")
 
 # =========================== GET HOSPITAL LIST ===========================
 @app.route('/hospitals')
@@ -155,6 +211,30 @@ def get_hospitals():
     else:
         flash(f"Error GET Hospital: {response.text}", "danger")
         return redirect("/hospital/create")
+
+# =========================== DELETE HOSPITAL ===========================
+@app.route("/hospital/delete/<hospital_id>", methods=["POST"])
+def delete_hospital(hospital_id):
+
+    if "access_token" not in session:
+        flash("Silakan login dulu", "warning")
+        return redirect("/login")
+
+    headers = {
+        "Authorization": f"Bearer {session['access_token']}",
+        "Content-Type": "application/json"
+    }
+
+    url = f"{API_V8}/ha_hospital/{hospital_id}"
+
+    response = requests.delete(url, headers=headers)
+
+    if response.status_code in [200, 204]:
+        flash("Rumah sakit berhasil dihapus!", "success")
+    else:
+        flash(f"Gagal menghapus: {response.text}", "danger")
+
+    return redirect("/hospitals")
 
 # =========================== LOGOUT ===========================
 @app.route("/logout")

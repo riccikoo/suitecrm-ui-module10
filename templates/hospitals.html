@@ -61,6 +61,13 @@
                                                             '{{ item.attributes.phone }}', '{{ item.attributes.date_entered }}')">
                                             Detail
                                         </button>
+                                        <a href="/hospital/edit/{{ item.id }}" class="btn-edit">
+                                            Edit
+                                        </a>
+                                        <form action="/hospital/delete/{{ item.id }}" method="POST" style="display:inline-block;"
+                                            onsubmit="return confirm('Yakin ingin menghapus rumah sakit ini?');">
+                                            <button class="btn-danger">Delete</button>
+                                        </form>
                                     </td>
                                 </tr>
                             {% endfor %}
