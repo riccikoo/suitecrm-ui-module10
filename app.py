@@ -147,6 +147,7 @@ def edit_hospital(hospital_id):
 
         if response.status_code == 200:
             hospital = response.json().get("data", {})
+            print(hospital)
             return render_template("hospital_edit.html", hospital=hospital)
         else:
             flash("Gagal mengambil data rumah sakit", "danger")
