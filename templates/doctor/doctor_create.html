@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Dokter - Health System Suite</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">HS</div>
+                    <h1>Health System</h1>
+                </div>
+                <div class="user-menu">
+                    <a href="/dashboard">Dashboard</a>
+                    <a href="/hospitals">Rumah Sakit</a>
+                    <a href="/doctors">Dokter</a>
+                    <a href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="page-header">
+            <div class="page-title">
+                <h1>Tambah Dokter Baru</h1>
+                <p>Tambahkan data dokter baru ke dalam sistem</p>
+            </div>
+            <div class="page-actions">
+                <a href="/doctors" class="btn-primary">← Kembali ke Daftar</a>
+            </div>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'danger' else 'success' }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+        
+        <div class="card">
+            <form method="POST" action="/doctor/create">
+                <div class="form-group">
+                    <label for="name">Nama Lengkap Dokter *</label>
+                    <input type="text" id="name" name="name" class="form-control" required>
+                </div>
+
+                <div class="form-row" style="display: flex; gap: 20px; margin-bottom: 20px;">
+                    <div style="flex: 1;">
+                        <div class="form-group">
+                            <label for="gender">Jenis Kelamin *</label>
+                            <select id="gender" name="gender" class="form-control" required>
+                                <option value="">Pilih Jenis Kelamin</option>
+                                <option value="male">Laki-laki</option>
+                                <option value="female">Perempuan</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="flex: 1;">
+                        <div class="form-group">
+                            <label for="specialization">Spesialisasi *</label>
+                            <input type="text" id="specialization" name="specialization" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row" style="display: flex; gap: 20px; margin-bottom: 20px;">
+                    <div style="flex: 1;">
+                        <div class="form-group">
+                            <label for="nik">NIK</label>
+                            <input type="text" id="nik" name="nik" class="form-control">
+                        </div>
+                    </div>
+                    <div style="flex: 1;">
+                        <div class="form-group">
+                            <label for="no_sip">No. SIP</label>
+                            <input type="text" id="no_sip" name="no_sip" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" class="form-control">
+                </div>
+
+                <div style="display: flex; gap: 15px; margin-top: 30px;">
+                    <button type="submit" class="btn-primary">Simpan Dokter</button>
+                    <a href="/doctors" class="btn-primary" style="background-color: var(--gray-dark);">Batal</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

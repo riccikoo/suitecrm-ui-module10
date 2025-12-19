@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Dokter - Health System Suite</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">HS</div>
+                    <h1>Health System</h1>
+                </div>
+                <div class="user-menu">
+                    <a href="/dashboard">Dashboard</a>
+                    <a href="/hospitals">Rumah Sakit</a>
+                    <a href="/doctors">Dokter</a>
+                    <a href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="page-header">
+            <div class="page-title">
+                <h1>Daftar Dokter</h1>
+                <p>Manajemen data dokter terdaftar dalam sistem</p>
+            </div>
+            <div class="page-actions">
+                <a href="/doctor/create" class="btn-primary">+ Tambah Dokter Baru</a>
+            </div>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'danger' else 'success' }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+        
+        <div class="card">
+            {% if doctors %}
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Nama Dokter</th>
+                                <th>Spesialisasi</th>
+                                <th>Jenis Kelamin</th>
+                                <th>Email</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for doctor in doctors %}
+                                <tr>
+                                    <td><strong>{{ doctor.attributes.name }}</strong></td>
+                                    <td>{{ doctor.attributes.specialization }}</td>
+                                    <td>
+                                        {% if doctor.attributes.gender == 'male' %}
+                                            Laki-laki
+                                        {% elif doctor.attributes.gender == 'female' %}
+                                            Perempuan
+                                        {% else %}
+                                            {{ doctor.attributes.gender }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ doctor.attributes.email }}</td>
+                                    <td>
+                                        <div style="display: flex; gap: 8px;">
+                                            <a href="/doctor/edit/{{ doctor.id }}" class="btn-detail" style="text-decoration: none; text-align: center;">
+                                                Edit
+                                            </a>
+                                            <form action="/doctor/delete/{{ doctor.id }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus dokter ini?');" style="margin: 0;">
+                                                <button type="submit" class="btn-detail" style="background-color: var(--error);">
+                                                    Hapus
+                                                </button>
+                                            </form>
+                                            <button 
+                                                class="btn-detail" 
+                                                onclick="openModal('{{ doctor.id }}', '{{ doctor.attributes.name }}', '{{ doctor.attributes.specialization }}',
+                                                                '{{ doctor.attributes.gender }}', '{{ doctor.attributes.nik }}',
+                                                                '{{ doctor.attributes.no_sip }}', '{{ doctor.attributes.email }}',
+                                                                '{{ doctor.attributes.date_entered }}')">
+                                                Detail
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">👨‍⚕️</div>
+                    <h3>Data Tidak Ditemukan</h3>
+                    <p>Belum ada data dokter yang terdaftar dalam sistem.</p>
+                    <a href="/doctor/create" class="btn-primary" style="margin-top: 20px;">Tambah Dokter Pertama</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Modal Detail Dokter -->
+    <div id="doctorModal" class="modal-overlay" style="display:none;">
+        <div class="modal-box">
+            <h2>Detail Dokter</h2>
+            <table class="modal-table">
+                <tr><th>ID</th><td id="d_id"></td></tr>
+                <tr><th>Nama Dokter</th><td id="d_name"></td></tr>
+                <tr><th>Spesialisasi</th><td id="d_specialization"></td></tr>
+                <tr><th>Jenis Kelamin</th><td id="d_gender"></td></tr>
+                <tr><th>NIK</th><td id="d_nik"></td></tr>
+                <tr><th>No. SIP</th><td id="d_sip"></td></tr>
+                <tr><th>Email</th><td id="d_email"></td></tr>
+                <tr><th>Dibuat Pada</th><td id="d_date"></td></tr>
+            </table>
+            <button class="btn-close" onclick="closeModal()">Tutup</button>
+        </div>
+    </div>
+
+    <script>
+        function openModal(id, name, specialization, gender, nik, sip, email, date) {
+            document.getElementById("d_id").innerText = id;
+            document.getElementById("d_name").innerText = name;
+            document.getElementById("d_specialization").innerText = specialization || "-";
+            document.getElementById("d_gender").innerText = gender === 'male' ? 'Laki-laki' : gender === 'female' ? 'Perempuan' : gender || "-";
+            document.getElementById("d_nik").innerText = nik || "-";
+            document.getElementById("d_sip").innerText = sip || "-";
+            document.getElementById("d_email").innerText = email || "-";
+            document.getElementById("d_date").innerText = date || "-";
+
+            document.getElementById("doctorModal").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("doctorModal").style.display = "none";
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('doctorModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
